@@ -1,9 +1,31 @@
-fn main() {
-    println!("Hello, world!");
+use postgres::{Client, NoTls, Error};
+use env::var;
 
-    another_function(18, 's');
-}
+fn main() -> Result<(), Error> {
 
-fn another_function(value: i32, unit_label : char) {
-    println!("The measurement is: {value} {unit_label}");
+    let pg_url = env:var("PG_LOCAL").unwrap_or_else(|_| "postgresql://postgres:postgres@localhost/library".to_string());
+
+    println!("Connecting to PostgreSQL at: {}", pg_url);
+
+    /*
+    let mut client = Client::connect(&pg_url, NoTls)?;
+    
+    client.batch_execute("
+        CREATE TABLE IF NOT EXISTS author (
+            id              SERIAL PRIMARY KEY,
+            name            VARCHAR NOT NULL,
+            country         VARCHAR NOT NULL
+            )
+    ")?;
+
+    client.batch_execute("
+        CREATE TABLE IF NOT EXISTS book  (
+            id              SERIAL PRIMARY KEY,
+            title           VARCHAR NOT NULL,
+            author_id       INTEGER NOT NULL REFERENCES author
+            )
+    ")?;
+    */
+    Ok(())
+
 }
